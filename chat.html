@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>talks about scripts</title>
+    <title>Talks About Scripts</title>
     <link rel="stylesheet" href="chat.css">
 </head>
 <body>
-  <div class="slideshow">
+    <div class="slideshow">
         <div class="slide" style="background-image: url('images/image1.jpg');"></div>
         <div class="slide" style="background-image: url('images/image2.jpg');"></div>
         <div class="slide" style="background-image: url('images/image3.jpg');"></div>
         <div class="slide" style="background-image: url('images/image4.jpg');"></div>
         <div class="slide" style="background-image: url('images/image5.jpg');"></div>
     </div>
+    
     <div class="chat-container">
         <header class="chat-header">
-            <h2>ancient</h2>
+            <h2>Ancient</h2>
             <p id="username-display"></p>
         </header>
         <div class="chat-box" id="chat-box">
-            <!-- Messages will be shown here -->
+            <!-- Messages will be loaded here -->
         </div>
         <div class="chat-input">
             <input type="text" id="message-input" placeholder="Type a message...">
@@ -31,8 +32,24 @@
     <script>
         // Get the username from URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
-        const username = urlParams.get('username');
-        document.getElementById('username-display').textContent = username ? `Welcome, ${username}` : 'Welcome!';
+        const username = urlParams.get('username') || "Anonymous";
+        document.getElementById('username-display').textContent = `Welcome, ${username}`;
+
+        // Function to load messages from local storage
+        function loadMessages() {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = ""; // Clear previous messages
+            const messages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+
+            messages.forEach(msg => {
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', msg.type);
+                messageElement.textContent = `${msg.username}: ${msg.text}`;
+                chatBox.appendChild(messageElement);
+            });
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
         function sendMessage() {
             const input = document.getElementById('message-input');
@@ -47,8 +64,16 @@
             chatBox.appendChild(messageElement);
             chatBox.scrollTop = chatBox.scrollHeight;
 
+            // Save message to local storage
+            const messages = JSON.parse(localStorage.getItem("chatMessages")) || [];
+            messages.push({ username, text: message, type: 'sent' });
+            localStorage.setItem("chatMessages", JSON.stringify(messages));
+
             input.value = '';
         }
+
+        // Load messages on page load
+        window.onload = loadMessages;
     </script>
 </body>
 </html>
