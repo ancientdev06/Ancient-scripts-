@@ -30,7 +30,7 @@
 
     <!-- Hamburger Menu -->
     <div class="hamburger-container">
-        <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
+        <div id="hamburger-menu" class="hamburger-menu">☰</div>
         <div class="menu-panel" id="menu-panel">
             <h3>Menu</h3>
             <hr>
@@ -51,15 +51,15 @@
 
     <!-- JavaScript -->
     <script>
-        // Toggle menu visibility
-        function toggleMenu() {
-            const panel = document.getElementById('menu-panel');
-            panel.classList.toggle('show');
-        }
+        // Toggle Admin Panel
+        document.getElementById('hamburger-menu').addEventListener('click', function() {
+            const adminPanel = document.getElementById('admin-panel');
+            adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
+        });
 
-        // Save username and redirect to chat
-        document.getElementById('username-form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        // Username submission without form action (to avoid 405 error)
+        document.getElementById('username-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             const username = document.getElementById('username').value.trim();
             if (username) {
                 // Save username to localStorage
@@ -72,10 +72,16 @@
             }
         });
 
-        // Admin password check and show users
+        // Admin password check
+        document.getElementById('admin-password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAdminPassword();
+            }
+        });
+
         function checkAdminPassword() {
             const password = document.getElementById('admin-password').value;
-            if (password === 'yourAdminPassword') {
+            if (password === 'toppers123') {
                 document.getElementById('admin-panel').style.display = 'block';
                 showUsernames();
             } else {
@@ -83,7 +89,7 @@
             }
         }
 
-        // Display usernames in admin panel
+        // Display stored usernames
         function showUsernames() {
             const usernames = JSON.parse(localStorage.getItem('usernames')) || [];
             const userList = document.getElementById('user-list');
@@ -97,7 +103,7 @@
                     li.textContent = user;
                     userList.appendChild(li);
                 });
-             }
+            }
         }
     </script>
 </body>
