@@ -23,7 +23,7 @@
         <h2>Real-Time Chat</h2>
         <div id="chat-box"></div>
         <input type="text" id="message" placeholder="Type a message..." />
-        <button id="sendBtn" onclick="sendMessage()">Send</button>
+        <button id="sendBtn">Send</button>
     </div>
 
     <script>
@@ -35,13 +35,15 @@
             projectId: "ancient-r",
             storageBucket: "ancient-r.appspot.com",
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo"
+            appId: "YOUR_APP_ID"
         };
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const chatBox = document.getElementById("chat-box");
+        const sendBtn = document.getElementById("sendBtn");
+        const messageInput = document.getElementById("message");
 
         // Get stored username or ask again if not found
         let username = localStorage.getItem("username");
@@ -52,13 +54,9 @@
 
         // Fetch messages from Firebase
         function fetchMessages() {
-            database.ref("messages").on("value", (snapshot) => {
-                chatBox.innerHTML = ""; // Clear chat before updating
-                snapshot.forEach((childSnapshot) => {
-                    const msg = childSnapshot.val();
-                    displayMessage(msg);
-                });
-                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
+            database.ref("messages").on("child_added", (snapshot) => {
+                const msg = snapshot.val();
+                displayMessage(msg);
             });
         }
 
@@ -68,11 +66,12 @@
             div.classList.add("message", msg.username === username ? "user-message" : "other-message");
             div.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
             chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
         }
 
         // Send a new message
         function sendMessage() {
-            const text = document.getElementById("message").value.trim();
+            const text = messageInput.value.trim();
             if (!text) return;
 
             database.ref("messages").push({
@@ -81,11 +80,21 @@
                 timestamp: Date.now()
             });
 
-            document.getElementById("message").value = ""; // Clear input
+            messageInput.value = ""; // Clear input
         }
 
         // Load messages when the page opens
         fetchMessages();
+
+        // Add event listener to send button
+        sendBtn.addEventListener("click", sendMessage);
+
+        // Allow sending messages using "Enter" key
+        messageInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        });
     </script>
 </body>
 </html>
