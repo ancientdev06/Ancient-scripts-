@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Talks about Scripts</title>
+    <title>Talks About Scripts</title>
     <link rel="stylesheet" href="chat.css">
+    <!-- Firebase SDK -->
     <script type="module">
-        // Firebase imports (Modular SDK)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
 
-        // Firebase configuration
+        // Firebase Config (Replace with your config)
         const firebaseConfig = {
             apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo",
             authDomain: "ancient-r.firebaseapp.com",
@@ -25,50 +25,38 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const auth = getAuth();
+        const auth = getAuth(app);
 
-        // Login Function
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDisplay = document.getElementById('login-error');
+        let currentUsername = "Anonymous";
 
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    document.getElementById('login-container').style.display = 'none';
-                    document.querySelector('.chat-container').style.display = 'block'; // Show chat
-                    document.getElementById('username-display').textContent = `Welcome, ${user.email}`;
-                })
-                .catch((error) => {
-                    errorDisplay.textContent = error.message;
-                });
-        }
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUsername = user.displayName || `User-${user.uid.substring(0, 5)}`;
+                document.getElementById('username-display').textContent = `Welcome, ${currentUsername}`;
+            } else {
+                document.getElementById('username-display').textContent = "Welcome!";
+            }
+        });
 
-        // Send message function
+        // Send message to Firebase
         function sendMessage() {
             const input = document.getElementById('message-input');
             const message = input.value.trim();
             if (message === '') return;
 
-            if (!auth.currentUser) {
-                alert("Please login first!");
-                return;
-            }
-
-            const messagesRef = ref(db, 'messages');
-            push(messagesRef, {
-                username: auth.currentUser.email,
+            push(ref(db, 'messages'), {
+                username: currentUsername,
                 message: message,
                 timestamp: Date.now()
-            });
-
-            input.value = ''; // Clear input field
+            }).then(() => {
+                console.log("Message sent!");
+                input.value = '';
+            }).catch(error => console.error("Error sending message:", error));
         }
 
-        // Listen for new messages
-        const messagesRef = ref(db, 'messages');
-        onChildAdded(messagesRef, (snapshot) => {
+        // Listen for new messages in Firebase
+        onChildAdded(ref(db, 'messages'), (snapshot) => {
             const data = snapshot.val();
             const chatBox = document.getElementById('chat-box');
             const messageElement = document.createElement('div');
@@ -78,41 +66,24 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         });
 
-        // Handle authentication state change
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('login-container').style.display = 'none';
-                document.querySelector('.chat-container').style.display = 'block';
-                document.getElementById('username-display').textContent = `Welcome, ${user.email}`;
-            }
-        });
-
-        // Expose functions to global scope
-        window.login = login;
+        // Make sendMessage function globally available
         window.sendMessage = sendMessage;
+
     </script>
 </head>
 <body>
-
-    <div id="login-container">
-        <h2>Login</h2>
-        <input type="email" id="login-email" placeholder="Email">
-        <input type="password" id="login-password" placeholder="Password">
-        <button onclick="login()">Login</button>
-        <p id="login-error" style="color: red;"></p>
-    </div>
-
-    <div class="chat-container" style="display: none;">
+    <div class="chat-container">
         <header class="chat-header">
             <h2>Ancient</h2>
-            <p id="username-display"></p>
+            <p id="username-display">Welcome!</p>
         </header>
-        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will appear here -->
+        </div>
         <div class="chat-input">
             <input type="text" id="message-input" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
-
 </body>
 </html>
