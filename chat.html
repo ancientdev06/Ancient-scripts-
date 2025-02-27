@@ -5,18 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Talks about Scripts</title>
     <link rel="stylesheet" href="chat.css">
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js"></script>
 </head>
 <body>
-    <div class="slideshow">
-        <div class="slide" style="background-image: url('images/image1.jpg');"></div>
-        <div class="slide" style="background-image: url('images/image2.jpg');"></div>
-        <div class="slide" style="background-image: url('images/image3.jpg');"></div>
-        <div class="slide" style="background-image: url('images/image4.jpg');"></div>
-        <div class="slide" style="background-image: url('images/image5.jpg');"></div>
-    </div>
 
     <div id="login-container">
         <h2>Login</h2>
@@ -26,12 +19,13 @@
         <p id="login-error" style="color: red;"></p>
     </div>
 
-    <div class="chat-container" style="display: none;"> <header class="chat-header">
+    <div class="chat-container" style="display: none;">
+        <header class="chat-header">
             <h2>Ancient</h2>
             <p id="username-display"></p>
         </header>
         <div class="chat-box" id="chat-box">
-            </div>
+        </div>
         <div class="chat-input">
             <input type="text" id="message-input" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
@@ -41,7 +35,7 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // REMOVE THIS BEFORE PUBLISHING!
+            apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo", // Your API key
             authDomain: "ancient-r.firebaseapp.com",
             databaseURL: "https://ancient-r-default-rtdb.firebaseio.com/",
             projectId: "ancient-r",
