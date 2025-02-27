@@ -3,98 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat App</title>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <title>ancient scripts Posts</title>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        .chat-container { width: 90%; max-width: 400px; margin: 20px auto; background: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
-        #chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; border-radius: 5px; margin-bottom: 10px; }
-        .message { text-align: left; margin-bottom: 5px; padding: 8px; border-radius: 5px; }
-        .user-message { background-color: #dcf8c6; }
-        .other-message { background-color: #f1f1f1; }
-        #message { width: 80%; padding: 5px; }
-        #sendBtn { padding: 5px 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
-        #sendBtn:hover { background: #0056b3; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+        .post-box {
+            background: #161616;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        input, textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            font-size: 16px;
+        }
+        input {
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+        }
+        textarea {
+            min-height: 80px;
+            resize: none;
+            border-bottom: 1px solid #333;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #1a8cff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .post {
+            background: #161616;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            position: relative;
+        }
+        .username {
+            font-weight: bold;
+            color: #1a8cff;
+        }
+        .actions {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 14px;
+        }
+        .actions span {
+            margin-left: 10px;
+            cursor: pointer;
+            color: #ccc;
+        }
+        .actions span:hover {
+            color: red;
+        }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <h2>Real-Time Chat</h2>
-        <div id="chat-box"></div>
-        <input type="text" id="message" placeholder="Type a message..." />
-        <button id="sendBtn">Send</button>
+
+    <div class="container">
+        <div class="post-box">
+            <input type="text" id="username" placeholder="Enter username">
+            <textarea id="postContent" placeholder="What's on your mind?"></textarea>
+            <button onclick="postThread()">Post</button>
+        </div>
+        <div id="posts"></div>
     </div>
 
     <script>
-        // Firebase Configuration
+        // Firebase Config (Replace with your own)
         const firebaseConfig = {
-            apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo",
-            authDomain: "ancient-r-default-rtdb.firebaseapp.com",
-            databaseURL: "https://ancient-r-default-rtdb.firebaseio.com",
-            projectId: "ancient-r",
-            storageBucket: "ancient-r.appspot.com",
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const chatBox = document.getElementById("chat-box");
-        const sendBtn = document.getElementById("sendBtn");
-        const messageInput = document.getElementById("message");
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
 
-        // Get stored username or ask again if not found
-        let username = localStorage.getItem("username");
-        if (!username) {
-            username = prompt("Enter your name:");
-            localStorage.setItem("username", username);
-        }
+        function postThread() {
+            let username = document.getElementById("username").value.trim();
+            let content = document.getElementById("postContent").value.trim();
 
-        // Fetch messages from Firebase
-        function fetchMessages() {
-            database.ref("messages").on("child_added", (snapshot) => {
-                const msg = snapshot.val();
-                displayMessage(msg);
-            });
-        }
-
-        // Display messages in chatbox
-        function displayMessage(msg) {
-            let div = document.createElement("div");
-            div.classList.add("message", msg.username === username ? "user-message" : "other-message");
-            div.innerHTML = `<strong>${msg.username}:</strong> ${msg.message}`;
-            chatBox.appendChild(div);
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
-        }
-
-        // Send a new message
-        function sendMessage() {
-            const text = messageInput.value.trim();
-            if (!text) return;
-
-            database.ref("messages").push({
-                username: username,
-                message: text,
-                timestamp: Date.now()
-            });
-
-            messageInput.value = ""; // Clear input
-        }
-
-        // Load messages when the page opens
-        fetchMessages();
-
-        // Add event listener to send button
-        sendBtn.addEventListener("click", sendMessage);
-
-        // Allow sending messages using "Enter" key
-        messageInput.addEventListener("keypress", function (event) {
-            if (event.key === "Enter") {
-                sendMessage();
+            if (!username) {
+                alert("Please enter a username!");
+                return;
             }
-        });
+            if (!content) {
+                alert("Write something before posting!");
+                return;
+            }
+
+            // Add post to Firestore
+            db.collection("posts").add({
+                username: username,
+                content: content,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            document.getElementById("postContent").value = ""; // Clear textarea
+        }
+
+        function loadPosts() {
+            db.collection("posts").orderBy("timestamp", "desc").onSnapshot(snapshot => {
+                let postsContainer = document.getElementById("posts");
+                postsContainer.innerHTML = ""; // Clear previous posts
+
+                snapshot.forEach(doc => {
+                    let post = doc.data();
+                    let postId = doc.id;
+
+                    let postElement = document.createElement("div");
+                    postElement.classList.add("post");
+                    postElement.setAttribute("id", `post-${postId}`);
+
+                    postElement.innerHTML = `
+                        <p class="username">@${post.username}</p>
+                        <p class="post-text">${post.content}</p>
+                        <div class="actions">
+                            <span onclick="editPost('${postId}')">✏️</span>
+                            <span onclick="deletePost('${postId}')">🗑️</span>
+                        </div>
+                    `;
+
+                    postsContainer.appendChild(postElement);
+                });
+            });
+        }
+
+        function editPost(postId) {
+            let newText = prompt("Edit your post:");
+            if (newText && newText.trim() !== "") {
+                db.collection("posts").doc(postId).update({
+                    content: newText.trim()
+                });
+            }
+        }
+
+        function deletePost(postId) {
+            db.collection("posts").doc(postId).delete();
+        }
+
+        // Load posts on page load
+        loadPosts();
     </script>
+
 </body>
 </html>
