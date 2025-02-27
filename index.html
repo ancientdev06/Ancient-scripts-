@@ -22,8 +22,8 @@
         <p class="subtitle">Unlock the mysteries of history</p>
 
         <!-- Username Input -->
-        <form action="#" method="POST">
-            <input type="text" name="username" placeholder="Enter your username" required>
+        <form id="username-form">
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
             <button type="submit" class="animated-btn">Enter</button>
         </form>
     </div>
@@ -40,37 +40,64 @@
             <h3>Admin Access</h3>
             <input type="password" id="admin-password" placeholder="Enter Admin Password">
             <button onclick="checkAdminPassword()" class="animated-btn">Login</button>
+
+            <!-- Admin Panel to Show Usernames -->
+            <div id="admin-panel" style="display: none; margin-top: 20px;">
+                <h3>Users who entered the website:</h3>
+                <ul id="user-list"></ul>
+            </div>
         </div>
     </div>
 
-    <!-- Background Music -->
-    <audio id="background-sound" loop>
-        <source src="sounds/sound.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-
     <!-- JavaScript -->
     <script>
-        // Autoplay music with a 1-second delay
-        document.addEventListener('DOMContentLoaded', function() {
-            const sound = document.getElementById('background-sound');
-            sound.volume = 0.3; // Set default volume to 30%
-
-            setTimeout(() => {
-                sound.play().catch(error => console.log('Autoplay blocked:', error));
-            }, 1000); // 1 second delay
-        });
-
         // Toggle menu visibility
         function toggleMenu() {
             const panel = document.getElementById('menu-panel');
             panel.classList.toggle('show');
         }
- 
-        // Admin password check
+
+        // Save username and redirect to chat
+        document.getElementById('username-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            if (username) {
+                // Save username to localStorage
+                let usernames = JSON.parse(localStorage.getItem('usernames')) || [];
+                usernames.push(username);
+                localStorage.setItem('usernames', JSON.stringify(usernames));
+
+                // Redirect to chat page
+                window.location.href = `chat.html?username=${encodeURIComponent(username)}`;
+            }
+        });
+
+        // Admin password check and show users
         function checkAdminPassword() {
             const password = document.getElementById('admin-password').value;
-            alert(password === 'yourAdminPassword' ? 'Access Granted' : 'Incorrect Password');
+            if (password === 'yourAdminPassword') {
+                document.getElementById('admin-panel').style.display = 'block';
+                showUsernames();
+            } else {
+                alert('Incorrect Password');
+            }
+        }
+
+        // Display usernames in admin panel
+        function showUsernames() {
+            const usernames = JSON.parse(localStorage.getItem('usernames')) || [];
+            const userList = document.getElementById('user-list');
+            userList.innerHTML = '';
+
+            if (usernames.length === 0) {
+                userList.innerHTML = '<li>No users have entered yet.</li>';
+            } else {
+                usernames.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user;
+                    userList.appendChild(li);
+                });
+            }
         }
     </script>
 </body>
