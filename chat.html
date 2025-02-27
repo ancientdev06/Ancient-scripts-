@@ -4,58 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
-        #chat-box { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
+        .chat-container { width: 90%; max-width: 400px; margin: 20px auto; background: white; padding: 15px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); }
+        #chat-box { height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; background: #f9f9f9; border-radius: 5px; margin-bottom: 10px; }
+        .message { text-align: left; margin-bottom: 5px; padding: 8px; border-radius: 5px; }
+        .user-message { background-color: #dcf8c6; }
+        .other-message { background-color: #f1f1f1; }
         #message { width: 80%; padding: 5px; }
-        #sendBtn { padding: 5px 10px; }
+        #sendBtn { padding: 5px 10px; background: #007bff; color: white; border: none; cursor: pointer; border-radius: 5px; }
+        #sendBtn:hover { background: #0056b3; }
     </style>
-    <script type="module">
-        // Firebase setup
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
-        from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const chatRef = collection(db, "messages");
-
-        // Listen for new messages
-        const chatBox = document.getElementById("chat-box");
-        const q = query(chatRef, orderBy("timestamp", "asc"));
-        onSnapshot(q, (snapshot) => {
-            chatBox.innerHTML = "";
-            snapshot.forEach((doc) => {
-                let msg = doc.data();
-                chatBox.innerHTML += `<p><strong>${msg.name}:</strong> ${msg.text}</p>`;
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-
-        // Send message
-        window.sendMessage = async () => {
-            const name = "User"; // Change this to dynamic usernames
-            const message = document.getElementById("message").value;
-            if (message.trim() === "") return;
-            await addDoc(chatRef, { name, text: message, timestamp: new Date() });
-            document.getElementById("message").value = "";
-        };
-    </script>
-    <link rel="stylesheet" href="chat.css"> 
 </head>
 <body>
-    <h2>Real-Time Chat</h2>
-    <div id="chat-box"></div>
-    <input type="text" id="message" placeholder="Type a message..." />
-    <button id="sendBtn" onclick="sendMessage()">Send</button>
+    <div class="chat-container">
+        <h2>Real-Time Chat</h2>
+        <div id="chat-box"></div>
+        <input type="text" id="message" placeholder="Type a message..." />
+        <button id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // Supabase Setup
+        const SUPABASE_URL = "https://qyoxsnlsfbmwjmiicwmk.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5b3hzbmxzZmJtd2ptaWljd21rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2NjExNDYsImV4cCI6MjA1NjIzNzE0Nn0.F13ENvwZ5w54VpcY9Wdn2caakYqauItJvscp6i4OEIk";
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const chatBox = document.getElementById("chat-box");
+
+        // Fetch existing messages
+        async function fetchMessages() {
+            let { data, error } = await supabase.from("messages").select("*").order("timestamp", { ascending: true });
+            if (error) console.error("Error fetching messages:", error);
+            chatBox.innerHTML = "";
+            data.forEach(msg => displayMessage(msg));
+        }
+
+        // Display messages
+        function displayMessage(msg) {
+            let div = document.createElement("div");
+            div.classList.add("message", msg.name === "User" ? "user-message" : "other-message");
+            div.innerHTML = `<strong>${msg.name}:</strong> ${msg.text}`;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const name = "User"; // Change this dynamically for multiple users
+            const text = document.getElementById("message").value.trim();
+            if (!text) return;
+
+            let { error } = await supabase.from("messages").insert([{ name, text }]);
+            if (error) console.error("Error sending message:", error);
+            document.getElementById("message").value = "";
+        }
+
+        // Real-time message listener
+        supabase
+            .channel('realtime-chat')
+            .on('postgres_changes', { event: "INSERT", schema: "public", table: "messages" }, payload => {
+                displayMessage(payload.new);
+            })
+            .subscribe();
+
+        // Load messages on page load
+        fetchMessages();
+    </script>
 </body>
 </html>
