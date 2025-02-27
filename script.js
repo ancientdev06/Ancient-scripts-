@@ -4,18 +4,18 @@ document.getElementById('hamburger-menu').addEventListener('click', function() {
   adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
 });
 
-// Username submit functionality
+// Username submission without form action
 document.getElementById('username-form').addEventListener('submit', function(e) {
   e.preventDefault();
   const username = document.getElementById('username').value.trim();
   if (username) {
-    // Store username in localStorage
+    // Save username to localStorage
     let usernames = JSON.parse(localStorage.getItem('usernames')) || [];
     usernames.push(username);
     localStorage.setItem('usernames', JSON.stringify(usernames));
     
-    console.log('Username submitted:', username);
-    document.getElementById('username').value = '';
+    // Redirect to chat page
+    window.location.href = `chat.html?username=${encodeURIComponent(username)}`;
   }
 });
 
@@ -28,22 +28,20 @@ document.getElementById('admin-password').addEventListener('keypress', function(
 
 function checkAdminPassword() {
   const password = document.getElementById('admin-password').value;
-  const adminPanel = document.getElementById('admin-panel');
-
   if (password === 'toppers123') {
-    adminPanel.style.display = 'block';
+    document.getElementById('admin-panel').style.display = 'block';
     showUsernames();
   } else {
     alert('Incorrect Password');
   }
 }
 
-// Display stored usernames in Admin Panel
+// Show stored usernames
 function showUsernames() {
   const usernames = JSON.parse(localStorage.getItem('usernames')) || [];
   const userList = document.getElementById('user-list');
   userList.innerHTML = '';
-
+  
   if (usernames.length === 0) {
     userList.innerHTML = '<li>No users have entered yet.</li>';
   } else {
