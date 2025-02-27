@@ -27,7 +27,7 @@
     </div>
 
     <script>
-        // Firebase Configuration (Using Your API Key)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo",
             authDomain: "ancient-r.firebaseapp.com",
@@ -45,7 +45,7 @@
 
         const chatBox = document.getElementById("chat-box");
 
-        // Get stored username or ask again if not found
+        // Get stored username or ask for it
         let username = localStorage.getItem("username");
         if (!username) {
             username = prompt("Enter your name:");
@@ -59,7 +59,7 @@
                 snapshot.forEach((childSnapshot) => {
                     displayMessage(childSnapshot.val());
                 });
-                chatBox.scrollTop = chatBox.scrollHeight;
+                chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to latest message
             });
         }
 
@@ -80,9 +80,15 @@
                 username: username,
                 text: text,
                 timestamp: Date.now()
+            }, (error) => {
+                if (error) {
+                    console.error("Error sending message:", error);
+                    alert("Error sending message. Check console for details.");
+                } else {
+                    console.log("Message sent successfully!");
+                    document.getElementById("message").value = ""; // Clear input field
+                }
             });
-
-            document.getElementById("message").value = "";
         }
 
         // Load Messages when the page opens
