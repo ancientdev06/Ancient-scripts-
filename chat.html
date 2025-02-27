@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>talks about scripts</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+  <div class="slideshow">
+        <div class="slide" style="background-image: url('images/image1.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image2.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image3.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image4.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image5.jpg');"></div>
+    </div>
+    <div class="chat-container">
+        <header class="chat-header">
+            <h2>ancient</h2>
+            <p id="username-display"></p>
+        </header>
+        <div class="chat-box" id="chat-box">
+            <!-- Messages will be shown here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Type a message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // Get the username from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const username = urlParams.get('username');
+        document.getElementById('username-display').textContent = username ? `Welcome, ${username}` : 'Welcome!';
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message === '') return;
+
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'sent');
+            messageElement.textContent = `${username}: ${message}`;
+
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            input.value = '';
+        }
+    </script>
+</body>
+</html>
