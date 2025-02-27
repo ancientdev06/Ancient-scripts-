@@ -5,9 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Talks about Scripts</title>
     <link rel="stylesheet" href="chat.css">
-    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js"></script>
+    <script type="module">
+        // Firebase imports (Modular SDK)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-database.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo",
+            authDomain: "ancient-r.firebaseapp.com",
+            databaseURL: "https://ancient-r-default-rtdb.firebaseio.com/",
+            projectId: "ancient-r",
+            storageBucket: "ancient-r.appspot.com",
+            messagingSenderId: "56153710356",
+            appId: "1:56153710356:web:4ae289b63cf71c63312c01"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const auth = getAuth();
+
+        // Login Function
+        function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorDisplay = document.getElementById('login-error');
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    document.getElementById('login-container').style.display = 'none';
+                    document.querySelector('.chat-container').style.display = 'block'; // Show chat
+                    document.getElementById('username-display').textContent = `Welcome, ${user.email}`;
+                })
+                .catch((error) => {
+                    errorDisplay.textContent = error.message;
+                });
+        }
+
+        // Send message function
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            if (message === '') return;
+
+            if (!auth.currentUser) {
+                alert("Please login first!");
+                return;
+            }
+
+            const messagesRef = ref(db, 'messages');
+            push(messagesRef, {
+                username: auth.currentUser.email,
+                message: message,
+                timestamp: Date.now()
+            });
+
+            input.value = ''; // Clear input field
+        }
+
+        // Listen for new messages
+        const messagesRef = ref(db, 'messages');
+        onChildAdded(messagesRef, (snapshot) => {
+            const data = snapshot.val();
+            const chatBox = document.getElementById('chat-box');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.textContent = `${data.username}: ${data.message}`;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+
+        // Handle authentication state change
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-container').style.display = 'none';
+                document.querySelector('.chat-container').style.display = 'block';
+                document.getElementById('username-display').textContent = `Welcome, ${user.email}`;
+            }
+        });
+
+        // Expose functions to global scope
+        window.login = login;
+        window.sendMessage = sendMessage;
+    </script>
 </head>
 <body>
 
@@ -24,86 +107,12 @@
             <h2>Ancient</h2>
             <p id="username-display"></p>
         </header>
-        <div class="chat-box" id="chat-box">
-        </div>
+        <div class="chat-box" id="chat-box"></div>
         <div class="chat-input">
             <input type="text" id="message-input" placeholder="Type a message...">
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo", // Your API key
-            authDomain: "ancient-r.firebaseapp.com",
-            databaseURL: "https://ancient-r-default-rtdb.firebaseio.com/",
-            projectId: "ancient-r",
-            storageBucket: "ancient-r.appspot.com",
-            messagingSenderId: "56153710356",
-            appId: "1:56153710356:web:4ae289b63cf71c63312c01"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-        const auth = firebase.auth();
-
-        // Login Function
-        function login() {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            const errorDisplay = document.getElementById('login-error');
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // User signed in successfully.
-                    const user = userCredential.user;
-                    document.getElementById('login-container').style.display = 'none';
-                    document.querySelector('.chat-container').style.display = 'block'; // Show chat
-                    document.getElementById('username-display').textContent = `Welcome, ${user.uid}`;
-                })
-                .catch((error) => {
-                    // Handle errors.
-                    errorDisplay.textContent = error.message;
-                });
-        }
-
-        // Send message to Firebase
-        function sendMessage() {
-            const input = document.getElementById('message-input');
-            const message = input.value.trim();
-            if (message === '') return;
-
-            const chatBox = document.getElementById('chat-box');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message', 'sent');
-            messageElement.textContent = `${auth.currentUser.uid}: ${message}`; // Use UID
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Save message to Firebase
-            const messagesRef = db.ref('messages');
-            messagesRef.push({
-                username: auth.currentUser.uid, // Use UID
-                message: message,
-                timestamp: Date.now()
-            });
-
-            input.value = ''; // Clear input field
-        }
-
-        // Listen for new messages
-        const messagesRef = db.ref('messages');
-        messagesRef.on('child_added', (snapshot) => {
-            const data = snapshot.val();
-            const chatBox = document.getElementById('chat-box');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.textContent = `${data.username}: ${data.message}`; // Display UID
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    </script>
 </body>
 </html>
