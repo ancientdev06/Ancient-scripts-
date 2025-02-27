@@ -1,1 +1,77 @@
-index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancient Scripts</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Background Slideshow -->
+    <div class="slideshow">
+        <div class="slide" style="background-image: url('images/image1.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image2.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image3.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image4.jpg');"></div>
+        <div class="slide" style="background-image: url('images/image5.jpg');"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1 class="title">Welcome to <span>Ancient Scripts</span></h1>
+        <p class="subtitle">Unlock the mysteries of history</p>
+
+        <!-- Username Input -->
+        <form action="#" method="POST">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <button type="submit" class="animated-btn">Enter</button>
+        </form>
+    </div>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-container">
+        <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
+        <div class="menu-panel" id="menu-panel">
+            <h3>Menu</h3>
+            <hr>
+            <h3>About the Developers</h3>
+            <p>We are passionate about history and technology, bringing ancient scripts to life through an interactive platform.</p>
+            <hr>
+            <h3>Admin Access</h3>
+            <input type="password" id="admin-password" placeholder="Enter Admin Password">
+            <button onclick="checkAdminPassword()" class="animated-btn">Login</button>
+        </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="background-sound" loop>
+        <source src="sounds/sound.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- JavaScript -->
+    <script>
+        // Autoplay music with a 1-second delay
+        document.addEventListener('DOMContentLoaded', function() {
+            const sound = document.getElementById('background-sound');
+            sound.volume = 0.3; // Set default volume to 30%
+
+            setTimeout(() => {
+                sound.play().catch(error => console.log('Autoplay blocked:', error));
+            }, 1000); // 1 second delay
+        });
+
+        // Toggle menu visibility
+        function toggleMenu() {
+            const panel = document.getElementById('menu-panel');
+            panel.classList.toggle('show');
+        }
+
+        // Admin password check
+        function checkAdminPassword() {
+            const password = document.getElementById('admin-password').value;
+            alert(password === 'yourAdminPassword' ? 'Access Granted' : 'Incorrect Password');
+        }
+    </script>
+</body>
+</html>
