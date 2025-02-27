@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <script type="module">
+    <script>
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCzCmT5G243E0PCHCJ0mO3SWYVUBX0Jejo",
@@ -44,13 +44,9 @@
             appId: "1:56153710356:web:4ae289b63cf71c63312c01"
         };
 
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         // Get the username from the URL query parameter
         const urlParams = new URLSearchParams(window.location.search);
@@ -71,8 +67,8 @@
             chatBox.scrollTop = chatBox.scrollHeight;
 
             // Save message to Firebase
-            const messagesRef = ref(db, 'messages');
-            push(messagesRef, {
+            const messagesRef = db.ref('messages');
+            messagesRef.push({
                 username: username,
                 message: message,
                 timestamp: Date.now()
@@ -82,8 +78,8 @@
         }
 
         // Listen for new messages
-        const messagesRef = ref(db, 'messages');
-        onChildAdded(messagesRef, (snapshot) => {
+        const messagesRef = db.ref('messages');
+        messagesRef.on('child_added', (snapshot) => {
             const data = snapshot.val();
             const chatBox = document.getElementById('chat-box');
             const messageElement = document.createElement('div');
