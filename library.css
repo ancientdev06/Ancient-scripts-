@@ -1,15 +1,15 @@
-/* Ensure full height and remove white space */
+/* Remove extra space and ensure full height */
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevents extra space */
+    overflow: hidden; /* Prevents any extra white space */
 }
 
 /* Background Image */
 body {
     background: url('images/search image.jpg') no-repeat center center fixed;
-    background-size: cover; /* Ensures image fully covers the screen */
+    background-size: cover; /* Ensures the image fully covers the screen */
     color: #fff;
     display: flex;
     justify-content: center;
