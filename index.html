@@ -28,83 +28,35 @@
         </form>
     </div>
 
-    <!-- Hamburger Menu -->
-    <div class="hamburger-container">
-        <div id="hamburger-menu" class="hamburger-menu">☰</div>
-        <div class="menu-panel" id="menu-panel">
-            <h3>Menu</h3>
-            <hr>
-            <h3>About the Developers</h3>
-            <p>We are passionate about history and technology, bringing ancient scripts to life through an interactive platform.</p>
-            <hr>
-            <h3>Admin Access</h3>
-            <input type="password" id="admin-password" placeholder="Enter Admin Password">
-            <button onclick="checkAdminPassword()" class="animated-btn">Login</button>
-
-            <!-- Admin Panel to Show Usernames -->
-            <div id="admin-panel" style="display: none; margin-top: 20px;">
-                <h3>Users who entered the website:</h3>
-                <ul id="user-list"></ul>
-            </div>
-        </div>
-    </div>
-
     <!-- JavaScript -->
     <script>
-        // Toggle Admin Panel
-        document.getElementById('hamburger-menu').addEventListener('click', function() {
-            const adminPanel = document.getElementById('admin-panel');
-            adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("username-form").addEventListener("submit", function (e) {
+                e.preventDefault(); // Form submission ko rokna
+
+                const username = document.getElementById("username").value.trim();
+                
+                if (username) {
+                    // Username localStorage me save karna
+                    let usernames = JSON.parse(localStorage.getItem("usernames")) || [];
+                    usernames.push(username);
+                    localStorage.setItem("usernames", JSON.stringify(usernames));
+
+                    // Vedic Search Page pe redirect karna
+                    window.location.href = "library.html";
+                } else {
+                    alert("Please enter a valid username!");
+                }
+            });
+
+            // Agar user "Enter" press kare, to bhi same event trigger ho
+            document.getElementById("username").addEventListener("keypress", function (event) {
+                if (event.key === "Enter") {
+                    event.preventDefault(); // Default form submit behavior ko disable karna
+                    document.getElementById("username-form").dispatchEvent(new Event("submit")); // Form submit event ko manually trigger karna
+                }
+            });
         });
-
-        // Username submission without form action (to avoid 405 error)
-        document.getElementById('username-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            if (username) {
-                // Save username to localStorage
-                let usernames = JSON.parse(localStorage.getItem('usernames')) || [];
-                usernames.push(username);
-                localStorage.setItem('usernames', JSON.stringify(usernames));
-
-                // Redirect to chat page
-                window.location.href = `chat.html?username=${encodeURIComponent(username)}`;
-            }
-        });
-
-        // Admin password check
-        document.getElementById('admin-password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAdminPassword();
-            }
-        });
-
-        function checkAdminPassword() {
-            const password = document.getElementById('admin-password').value;
-            if (password === 'toppers123') {
-                document.getElementById('admin-panel').style.display = 'block';
-                showUsernames();
-            } else {
-                alert('Incorrect Password');
-            }
-        }
-
-        // Display stored usernames
-        function showUsernames() {
-            const usernames = JSON.parse(localStorage.getItem('usernames')) || [];
-            const userList = document.getElementById('user-list');
-            userList.innerHTML = '';
-
-            if (usernames.length === 0) {
-                userList.innerHTML = '<li>No users have entered yet.</li>';
-            } else {
-                usernames.forEach(user => {
-                    const li = document.createElement('li');
-                    li.textContent = user;
-                    userList.appendChild(li);
-                });
-            }
-        }
     </script>
 </body>
 </html>
