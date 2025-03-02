@@ -1,6 +1,18 @@
 document.getElementById('hamburger-menu').addEventListener('click', function () {
     const menuPanel = document.getElementById('menu-panel');
-    menuPanel.style.display = menuPanel.style.display === 'block' ? 'none' : 'block';
+    menuPanel.classList.toggle('show-menu');
+});
+
+// Username submission
+document.getElementById('username-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    if (username) {
+        let usernames = JSON.parse(localStorage.getItem('usernames')) || [];
+        usernames.push(username);
+        localStorage.setItem('usernames', JSON.stringify(usernames));
+        window.location.href = `chat.html?username=${encodeURIComponent(username)}`;
+    }
 });
 
 // Admin password check
