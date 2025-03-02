@@ -21,7 +21,7 @@
         <h1 class="title">Welcome to <span>Ancient Scripts</span></h1>
         <p class="subtitle">Unlock the mysteries of history</p>
 
-        <!-- Username Input -->
+        <!-- Name Input -->
         <form id="username-form">
             <input type="text" id="username" name="username" placeholder="Enter your name" required>
             <button type="submit" class="animated-btn">Enter</button>
@@ -37,15 +37,15 @@
                 const username = document.getElementById("username").value.trim();
                 
                 if (username) {
-                    // Username localStorage me save karna
-                    let usernames = JSON.parse(localStorage.getItem("usernames")) || [];
-                    usernames.push(username);
-                    localStorage.setItem("usernames", JSON.stringify(usernames));
+                    // Name localStorage me save karna
+                    let names = JSON.parse(localStorage.getItem("names")) || [];
+                    names.push(username);
+                    localStorage.setItem("names", JSON.stringify(names));
 
                     // Vedic Search Page pe redirect karna
                     window.location.href = "library.html";
                 } else {
-                    alert("Please enter a valid username!");
+                    alert("Please enter a valid name!");
                 }
             });
 
