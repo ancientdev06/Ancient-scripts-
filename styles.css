@@ -66,7 +66,7 @@ body {
 }
 
 .title span {
-    color: #5eb3f5; /* Bluish tone for "Ancient Scripts" */
+    color: #5eb3f5;
     text-shadow: 0 0 15px #5eb3f5;
 }
 
@@ -142,17 +142,18 @@ button:hover {
     transform: scale(1.2);
 }
 
+/* Menu Panel */
 .menu-panel {
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     color: white;
     border: 1px solid #5eb3f5;
     border-radius: 8px;
     padding: 1.5rem;
     width: 250px;
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 0;
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 70px;
+    right: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     animation: slideDown 0.3s ease-in-out;
 }
@@ -186,7 +187,13 @@ hr {
     }
 }
 
-/* Show Menu */
-.show {
+/* Admin Panel (Hidden initially) */
+#admin-panel {
+    display: none;
+    margin-top: 20px;
+}
+
+/* Show Menu Panel */
+.show-menu {
     display: block;
 }
