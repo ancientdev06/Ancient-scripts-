@@ -21,6 +21,7 @@
             background: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 10px;
+            position: relative;
         }
         input {
             width: 300px;
@@ -35,18 +36,104 @@
         input::placeholder {
             color: #bbb;
         }
+        .search-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+        .suggestions {
+            width: 320px;
+            margin: 5px auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 5px;
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: left;
+        }
+        .suggestions a {
+            display: block;
+            padding: 10px;
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .suggestions a:last-child {
+            border-bottom: none;
+        }
+        .suggestions a:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
     </style>
 </head>
 <body>
     <div class="search-container">
-        <h1>Vedic Library</h1>  
-        <input type="text" id="search" placeholder="Search for Vedas, Upanishads..." onkeypress="checkEnter(event)">
+        <h1>Vedic Library search any book </h1>  
+        <input type="text" id="search" placeholder="Search for Vedas, Upanishads..." onkeyup="showSuggestions()" onkeypress="checkEnter(event)">
+        <button class="search-button" onclick="searchItem()">Search</button>
+        <div class="suggestions" id="suggestions"></div>
     </div>
 
     <script>
+        const data = {
+            "ramayan": "library/ramayan.html",
+            "mahabharat": "library/mahabharat.html",
+            "vedas": "library/vedas.html",
+            "upanishads": "library/upanishads.html",
+            "bhagavad gita english": "https://drive.google.com/drive/folders/1SK1yXfthfsSfgIrQq7Pydz1-qVzTgS8c",
+            "bhagavad gita hindi": "https://drive.google.com/drive/folders/1S3c_S66i_isIFSEIpYwXVYjbdX4s7Dy_",
+            "bhagavad gita bengali": "https://drive.google.com/drive/folders/11Q84Ym5-PDHlVTsgAe0Trlvsd8vNyKyt",
+            "bhagavad gita punjabi": "https://drive.google.com/drive/folders/1S5xa2NQkVn3viv7vpLuCbdrqTy43Be85",
+            "gita as it is": "https://drive.google.com/drive/folders/1RnSdYMSf1otOZ4S5r7zRvtY8hfI3rqRc"
+        };
+
+        function showSuggestions() {
+            let input = document.getElementById("search").value.toLowerCase();
+            let suggestionsBox = document.getElementById("suggestions");
+            suggestionsBox.innerHTML = "";
+
+            if (input.length === 0) {
+                suggestionsBox.style.display = "none";
+                return;
+            }
+
+            let matches = Object.keys(data).filter(key => key.includes(input));
+
+            if (matches.length > 0) {
+                suggestionsBox.style.display = "block";
+                matches.forEach(match => {
+                    let suggestion = document.createElement("a");
+                    suggestion.href = data[match];
+                    suggestion.textContent = match.charAt(0).toUpperCase() + match.slice(1);
+                    suggestion.target = "_blank"; // Open in a new tab
+                    suggestionsBox.appendChild(suggestion);
+                });
+            } else {
+                suggestionsBox.style.display = "none";
+            }
+        }
+
         function checkEnter(event) {
             if (event.key === "Enter") {
-                window.location.href = "library.html"; // Redirect to the library page
+                searchItem();
+            }
+        }
+
+        function searchItem() {
+            let input = document.getElementById("search").value.toLowerCase();
+            if (data[input]) {
+                window.open(data[input], "_blank"); // Open in a new tab
+            } else {
+                window.location.href = "library.html";
             }
         }
     </script>
