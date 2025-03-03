@@ -21,20 +21,20 @@
         <h1 class="title">Welcome to <span>Ancient Scripts</span></h1>
         <p class="subtitle">Unlock the mysteries of history</p>
 
-        <!-- Name Input -->
+        <!-- Name Input Form -->
         <form id="username-form">
             <input type="text" id="username" name="username" placeholder="Enter your name" required>
             <button type="submit" class="animated-btn">Enter</button>
         </form>
     </div>
 
-    <!-- About & Copyright Sections (Now at the Bottom) -->
+    <!-- Footer with About & Copyright -->
     <footer class="footer">
         <p class="footer-link" id="about-developers">About the Developers</p>
-        <p class="footer-link" id="©copyright-info">Copyright</p>
+        <p class="footer-link" id="copyright-info">Copyright</p>
     </footer>
 
-    <!-- Modal Popup -->
+    <!-- Modal Popup for About & Copyright -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -45,16 +45,14 @@
     <!-- JavaScript -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            // Username Form Handling
             document.getElementById("username-form").addEventListener("submit", function (e) {
                 e.preventDefault();
-
                 const username = document.getElementById("username").value.trim();
-                
                 if (username) {
                     let names = JSON.parse(localStorage.getItem("names")) || [];
                     names.push(username);
                     localStorage.setItem("names", JSON.stringify(names));
-
                     window.location.href = "library.html";
                 } else {
                     alert("Please enter a valid name!");
@@ -66,37 +64,41 @@
             const modalBody = document.getElementById("modal-body");
             const closeModal = document.querySelector(".close");
 
+            // About Developers Click Event
             document.getElementById("about-developers").addEventListener("click", function () {
                 modalBody.innerHTML = `
                     <h2>About the Developers</h2>
                     <h3>UI/UX Designers</h3>
-                    <p><b>Karthikeya:</b> A creative mind who ensures every element on the screen feels intuitive and visually engaging.</p>
-                    <p><b>Bhavesh:</b> Specializes in user experience optimization, making sure interactions are smooth and accessible.</p>
+                    <p><b>Karthikeya:</b> Ensures intuitive and visually engaging designs.</p>
+                    <p><b>Bhavesh:</b> Focuses on user experience optimization.</p>
                     <hr>
                     <h3>Links & PDFs</h3>
-                    <p><b>Dev:</b> Handles legal advice and ensures that all shared content follows copyright guidelines.</p>
-                    <p><b>Akshay:</b> Manages retrieval and structuring of ancient texts for user accessibility.</p>
-                    <p><b>Pradeep:</b> Key contributor in idea generation and content review, ensuring platform accuracy.</p>
+                    <p><b>Dev:</b> Ensures legal and copyright compliance.</p>
+                    <p><b>Akshay:</b> Manages text retrieval and structuring.</p>
+                    <p><b>Pradeep:</b> Reviews and refines platform accuracy.</p>
                     <hr>
                     <h3>Supporters</h3>
-                    <p>Aditya & Karthik - Contributed insights, testing, and support to refine the platform.</p>
+                    <p>Aditya & Karthik - Provided insights, testing, and support.</p>
                 `;
                 modal.style.display = "block";
             });
 
+            // Copyright Click Event
             document.getElementById("copyright-info").addEventListener("click", function () {
                 modalBody.innerHTML = `
-                    <h2>©Copyright</h2>
-                    <p><b>Images:</b> All images are credited to ISKCON_Arts (Instagram: <a href="https://www.instagram.com/goloka_artss" target="_blank">@goloka_artss</a>)</p>
-                    <p><b>PDFs:</b> All texts and documents belong to their respective creators and rights holders.</p>
+                    <h2>© Copyright</h2>
+                    <p><b>Images:</b> All images are credited to ISKCON_Arts (Instagram: <a href="https://www.instagram.com/goloka_artss" target="_blank">@goloka_artss</a>).</p>
+                    <p><b>PDFs:</b> Belong to respective creators and rights holders.</p>
                 `;
                 modal.style.display = "block";
             });
 
+            // Close Modal
             closeModal.addEventListener("click", function () {
                 modal.style.display = "none";
             });
 
+            // Click outside Modal to Close
             window.addEventListener("click", function (event) {
                 if (event.target === modal) {
                     modal.style.display = "none";
