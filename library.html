@@ -127,7 +127,8 @@
             "arthashastra": "https://drive.google.com/drive/folders/11J15av4sRP_tO7N0fye_5T-LxEd3ZTO9",
             "chanakya niti": "https://drive.google.com/drive/folders/1fNJyjs7rFBwDY-86_vxztzxVCibBtyD2",
             "bhagavatam": "https://drive.google.com/drive/folders/11jg3j-ucjhomcxPtSBaXpzvadUo6wppV",
-            "bhagwat puran": "https://drive.google.com/drive/folders/11jg3j-ucjhomcxPtSBaXpzvadUo6wppV"
+            "bhagwat puran": "https://drive.google.com/drive/folders/11jg3j-ucjhomcxPtSBaXpzvadUo6wppV",
+            "mahabharata": "https://drive.google.com/drive/folders/11alC2QH7nURTYV-DwKFZ6_7gGNHa54av"
         };
 
         function showSuggestions() {
@@ -151,20 +152,11 @@
                     suggestion.target = "_blank";
                     suggestionsBox.appendChild(suggestion);
                 });
-            } else {
-                suggestionsBox.style.display = "none";
             }
         }
 
-        function checkEnter(event) {
-            if (event.key === "Enter") searchItem();
-        }
-
-        function searchItem() {
-            let input = document.getElementById("search").value.toLowerCase();
-            if (data[input]) window.open(data[input], "_blank");
-            else window.location.href = "library.html";
-        }
+        function checkEnter(event) { if (event.key === "Enter") searchItem(); }
+        function searchItem() { window.open(data[document.getElementById("search").value.toLowerCase()], "_blank"); }
     </script>
 </body>
 </html>
