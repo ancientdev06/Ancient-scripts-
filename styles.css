@@ -37,6 +37,18 @@ body {
     transition: opacity 2s ease-in-out;
 }
 
+/* Dark Overlay for Better Visibility */
+.slideshow::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    z-index: 1;
+}
+
 .slide:first-child {
     opacity: 1;
 }
@@ -60,14 +72,17 @@ body {
     animation: fadeIn 1.5s ease-in-out;
 }
 
+/* Golden Glow for Title */
 .title {
     font-size: 4rem;
     margin-bottom: 1rem;
+    color: gold;
+    text-shadow: 0 0 15px gold, 0 0 25px gold;
 }
 
 .title span {
-    color: #5eb3f5;
-    text-shadow: 0 0 15px #5eb3f5;
+    color: gold;
+    text-shadow: 0 0 15px gold, 0 0 25px gold;
 }
 
 .subtitle {
@@ -109,6 +124,20 @@ button:hover {
     box-shadow: 0 0 15px #5eb3f5;
 }
 
+/* Light Grey for Top Searches */
+.top-searches a {
+    color: #bbb;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+.top-searches a:hover {
+    text-decoration: underline;
+    color: white;
+}
+
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -119,6 +148,80 @@ button:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Footer Section */
+.footer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+/* Footer Links (About & Copyright) */
+.footer-link {
+    color: gold;
+    cursor: pointer;
+    font-size: 18px;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: rgba(255, 215, 0, 0.1); /* Light golden background */
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+
+.footer-link:hover {
+    text-shadow: 0 0 15px gold, 0 0 25px gold;
+    color: white;
+    background: rgba(255, 215, 0, 0.2);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    overflow: auto;
+}
+
+.modal-content {
+    background-color: black;
+    color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #5eb3f5;
+    width: 50%;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.modal-content h2, h3 {
+    color: gold; /* Golden color */
+    text-shadow: 0px 0px 10px gold;
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
 }
 
 /* Hamburger Menu */
@@ -142,18 +245,17 @@ button:hover {
     transform: scale(1.2);
 }
 
-/* Menu Panel */
 .menu-panel {
-    background: rgba(0, 0, 0, 0.9);
+    background: rgba(0, 0, 0, 0.8);
     color: white;
     border: 1px solid #5eb3f5;
     border-radius: 8px;
     padding: 1.5rem;
     width: 250px;
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 70px;
-    right: 10px;
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     animation: slideDown 0.3s ease-in-out;
 }
@@ -187,13 +289,7 @@ hr {
     }
 }
 
-/* Admin Panel (Hidden initially) */
-#admin-panel {
-    display: none;
-    margin-top: 20px;
-}
-
-/* Show Menu Panel */
-.show-menu {
+/* Show Menu */
+.show {
     display: block;
 }
