@@ -109,6 +109,10 @@
             <a href="https://drive.google.com/drive/folders/1gSOKA4i2fIwq4ED0GSlqc8Lxu6PhfcfW" target="_blank">Ramayan (Telugu)</a>
             <a href="https://drive.google.com/drive/folders/1U6h8EIfdhmJQY4T3ZyMEUcLZPqu5ZIOu" target="_blank">Puranas (English)</a>
             <a href="https://drive.google.com/drive/folders/1UwwXbjWD56Osw6j4cxpuNpZODZk81DJy" target="_blank">Puranas (Telugu)</a>
+            <a href="https://drive.google.com/drive/folders/11alC2QH7nURTYV-DwKFZ6_7gGNHa54av" target="_blank">Mahabharata (English)</a>
+            <a href="https://drive.google.com/drive/folders/1SYbyVr4pSdHstuy0mk4PdHHNP6yDm0nd" target="_blank">Mahabharata (Hindi)</a>
+            <a href="https://drive.google.com/drive/folders/11J15av4sRP_tO7N0fye_5T-LxEd3ZTO9" target="_blank">Arthashastra</a>
+            <a href="https://drive.google.com/drive/folders/1fNJyjs7rFBwDY-86_vxztzxVCibBtyD2" target="_blank">Chanakya Niti</a>
         </div>
     </div>
 
@@ -121,7 +125,11 @@
             "bhagavad gita punjabi": "https://drive.google.com/drive/folders/1S5xa2NQkVn3viv7vpLuCbdrqTy43Be85",
             "gita as it is": "https://drive.google.com/drive/folders/1RnSdYMSf1otOZ4S5r7zRvtY8hfI3rqRc",
             "puranas english": "https://drive.google.com/drive/folders/1U6h8EIfdhmJQY4T3ZyMEUcLZPqu5ZIOu",
-            "puranas telugu": "https://drive.google.com/drive/folders/1UwwXbjWD56Osw6j4cxpuNpZODZk81DJy"
+            "puranas telugu": "https://drive.google.com/drive/folders/1UwwXbjWD56Osw6j4cxpuNpZODZk81DJy",
+            "mahabharata english": "https://drive.google.com/drive/folders/11alC2QH7nURTYV-DwKFZ6_7gGNHa54av",
+            "mahabharata hindi": "https://drive.google.com/drive/folders/1SYbyVr4pSdHstuy0mk4PdHHNP6yDm0nd",
+            "arthashastra": "https://drive.google.com/drive/folders/11J15av4sRP_tO7N0fye_5T-LxEd3ZTO9",
+            "chanakya niti": "https://drive.google.com/drive/folders/1fNJyjs7rFBwDY-86_vxztzxVCibBtyD2"
         };
 
         function showSuggestions() {
@@ -142,26 +150,11 @@
                     let suggestion = document.createElement("a");
                     suggestion.href = data[match];
                     suggestion.textContent = match.charAt(0).toUpperCase() + match.slice(1);
-                    suggestion.target = "_blank"; // Open in a new tab
+                    suggestion.target = "_blank";
                     suggestionsBox.appendChild(suggestion);
                 });
             } else {
                 suggestionsBox.style.display = "none";
-            }
-        }
-
-        function checkEnter(event) {
-            if (event.key === "Enter") {
-                searchItem();
-            }
-        }
-
-        function searchItem() {
-            let input = document.getElementById("search").value.toLowerCase();
-            if (data[input]) {
-                window.open(data[input], "_blank"); // Open in a new tab
-            } else {
-                window.location.href = "library.html";
             }
         }
     </script>
