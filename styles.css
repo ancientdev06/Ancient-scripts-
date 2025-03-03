@@ -37,7 +37,7 @@ body {
     transition: opacity 2s ease-in-out;
 }
 
-/* Dark Overlay for Better Visibility */
+/* Dark Overlay for Visibility */
 .slideshow::after {
     content: "";
     position: absolute;
@@ -45,14 +45,11 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Dark overlay */
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1;
 }
 
-.slide:first-child {
-    opacity: 1;
-}
-
+/* Smooth Slideshow Transition */
 @keyframes slideshow {
     0% { opacity: 0; }
     20% { opacity: 1; }
@@ -65,22 +62,17 @@ body {
 .slide:nth-child(4) { animation: slideshow 20s infinite 12s; }
 .slide:nth-child(5) { animation: slideshow 20s infinite 16s; }
 
-/* Container */
+/* Main Container */
 .container {
     z-index: 2;
     padding: 2rem;
     animation: fadeIn 1.5s ease-in-out;
 }
 
-/* Golden Glow for Title */
+/* Title Styling */
 .title {
     font-size: 4rem;
     margin-bottom: 1rem;
-    color: gold;
-    text-shadow: 0 0 15px gold, 0 0 25px gold;
-}
-
-.title span {
     color: gold;
     text-shadow: 0 0 15px gold, 0 0 25px gold;
 }
@@ -90,7 +82,7 @@ body {
     margin-bottom: 2rem;
 }
 
-/* Username Form */
+/* Input Form */
 form {
     display: flex;
     flex-direction: column;
@@ -98,9 +90,7 @@ form {
     gap: 1rem;
 }
 
-input[type="text"], 
-input[type="password"], 
-button {
+input[type="text"], button {
     padding: 0.8rem 1.5rem;
     font-size: 1rem;
     border: none;
@@ -108,7 +98,7 @@ button {
     outline: none;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"] {
     width: 300px;
 }
 
@@ -124,32 +114,6 @@ button:hover {
     box-shadow: 0 0 15px #5eb3f5;
 }
 
-/* Light Grey for Top Searches */
-.top-searches a {
-    color: #bbb;
-    text-decoration: none;
-    font-size: 16px;
-    margin: 0 10px;
-    font-weight: bold;
-}
-
-.top-searches a:hover {
-    text-decoration: underline;
-    color: white;
-}
-
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* Footer Section */
 .footer {
     position: fixed;
@@ -163,16 +127,15 @@ button:hover {
     gap: 30px;
 }
 
-/* Footer Links (About & Copyright) */
+/* Footer Links */
 .footer-link {
     color: gold;
     cursor: pointer;
     font-size: 18px;
-    text-decoration: none;
     font-weight: bold;
     padding: 10px 15px;
     border-radius: 8px;
-    background: rgba(255, 215, 0, 0.1); /* Light golden background */
+    background: rgba(255, 215, 0, 0.1);
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     transition: all 0.3s ease-in-out;
 }
@@ -183,7 +146,7 @@ button:hover {
     background: rgba(255, 215, 0, 0.2);
 }
 
-/* Modal Styles */
+/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -208,7 +171,7 @@ button:hover {
 }
 
 .modal-content h2, h3 {
-    color: gold; /* Golden color */
+    color: gold;
     text-shadow: 0px 0px 10px gold;
 }
 
@@ -260,21 +223,9 @@ button:hover {
     animation: slideDown 0.3s ease-in-out;
 }
 
-.menu-panel h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.menu-panel p {
-    font-size: 1rem;
-    margin-bottom: 1rem;
-}
-
-hr {
-    border: 0;
-    height: 1px;
-    background: #5eb3f5;
-    margin: 1rem 0;
+/* Show Menu */
+.show {
+    display: block;
 }
 
 /* Slide Down Animation */
@@ -289,7 +240,34 @@ hr {
     }
 }
 
-/* Show Menu */
-.show {
-    display: block;
+/* Fade-in Effect */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.2rem;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+
+    .footer {
+        flex-direction: column;
+        gap: 10px;
+    }
 }
