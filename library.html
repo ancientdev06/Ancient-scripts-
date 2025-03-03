@@ -73,27 +73,55 @@
         .suggestions a:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+        .top-searches {
+            margin-top: 20px;
+        }
+        .top-searches p {
+            color: #bbb;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .top-searches a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+        .top-searches a:hover {
+            text-decoration: underline;
+            color: #00aaff;
+        }
     </style>
 </head>
 <body>
     <div class="search-container">
-        <h1> Vedic Library search any book </h1>  
-        <input type="text" id="search" placeholder="Search for Puranas, Vedas, Upanishads..." onkeyup="showSuggestions()" onkeypress="checkEnter(event)">
+        <h1>Vedic Library</h1>  
+        <input type="text" id="search" placeholder="Search for scriptures..." onkeyup="showSuggestions()" onkeypress="checkEnter(event)">
         <button class="search-button" onclick="searchItem()">Search</button>
         <div class="suggestions" id="suggestions"></div>
+
+        <!-- Top Searches Section -->
+        <div class="top-searches">
+            <p>Top Searches:</p>
+            <a href="https://drive.google.com/drive/folders/1SK1yXfthfsSfgIrQq7Pydz1-qVzTgS8c" target="_blank">Bhagavad Gita (English)</a>
+            <a href="https://drive.google.com/drive/folders/1S3c_S66i_isIFSEIpYwXVYjbdX4s7Dy_" target="_blank">Bhagavad Gita (Hindi)</a>
+            <a href="https://drive.google.com/drive/folders/1gSOKA4i2fIwq4ED0GSlqc8Lxu6PhfcfW" target="_blank">Ramayan (Telugu)</a>
+            <a href="https://drive.google.com/drive/folders/1U6h8EIfdhmJQY4T3ZyMEUcLZPqu5ZIOu" target="_blank">Puranas (English)</a>
+            <a href="https://drive.google.com/drive/folders/1UwwXbjWD56Osw6j4cxpuNpZODZk81DJy" target="_blank">Puranas (Telugu)</a>
+        </div>
     </div>
 
     <script>
         const data = {
-            "ramayan": "library/ramayan.html",
-            "mahabharat": "library/mahabharat.html",
-            "vedas": "library/vedas.html",
-            "upanishads": "library/upanishads.html",
+            "ramayan telugu": "https://drive.google.com/drive/folders/1gSOKA4i2fIwq4ED0GSlqc8Lxu6PhfcfW",
             "bhagavad gita english": "https://drive.google.com/drive/folders/1SK1yXfthfsSfgIrQq7Pydz1-qVzTgS8c",
             "bhagavad gita hindi": "https://drive.google.com/drive/folders/1S3c_S66i_isIFSEIpYwXVYjbdX4s7Dy_",
             "bhagavad gita bengali": "https://drive.google.com/drive/folders/11Q84Ym5-PDHlVTsgAe0Trlvsd8vNyKyt",
             "bhagavad gita punjabi": "https://drive.google.com/drive/folders/1S5xa2NQkVn3viv7vpLuCbdrqTy43Be85",
-            "gita as it is": "https://drive.google.com/drive/folders/1RnSdYMSf1otOZ4S5r7zRvtY8hfI3rqRc"
+            "gita as it is": "https://drive.google.com/drive/folders/1RnSdYMSf1otOZ4S5r7zRvtY8hfI3rqRc",
+            "puranas english": "https://drive.google.com/drive/folders/1U6h8EIfdhmJQY4T3ZyMEUcLZPqu5ZIOu",
+            "puranas telugu": "https://drive.google.com/drive/folders/1UwwXbjWD56Osw6j4cxpuNpZODZk81DJy"
         };
 
         function showSuggestions() {
